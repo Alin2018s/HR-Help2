@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Trophy, RefreshCcw, Settings, Play, CheckCircle2, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
+import Papa from 'papaparse';
 import { Person } from '../types';
 
 interface LuckyDrawProps {
