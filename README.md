@@ -8,7 +8,7 @@
 - **高效開發**: 使用 Vite + React 19，提供極速的開發體驗。
 - **現代化設計**: 採用 Tailwind CSS 4 與 Framer Motion (Motion) 打造流暢 UI。
 - **自動化部署**: 整合 GitHub Actions，推送到 `main` 分支後自動部署至 GitHub Pages。
-
+  
 ## 🛠️ 技術棧
 
 - **Frontend**: React 19, TypeScript, Vite 6
