@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Trophy, RefreshCcw, Settings, Play, CheckCircle2 } from 'lucide-react';
+import { Trophy, RefreshCcw, Settings, Play, CheckCircle2, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { Person } from '../types';
@@ -167,10 +167,36 @@ export default function LuckyDraw({ names }: LuckyDrawProps) {
 
         {/* History Panel */}
         <div className="w-full md:w-64 bg-gray-50/50 p-6 rounded-2xl border border-gray-100 flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
-            中獎紀錄 ({history.length})
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" />
+              中獎紀錄 ({history.length})
+            </h3>
+            {history.length > 0 && (
+              <button 
+                onClick={() => {
+                  const csvData = history.map((p, i) => ({
+                    '抽獎序號': history.length - i,
+                    '姓名': p.name
+                  }));
+                  const csv = Papa.unparse(csvData);
+                  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', `抽獎紀錄_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  setTimeout(() => URL.revokeObjectURL(url), 100);
+                }}
+                className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                title="下載紀錄"
+              >
+                <Download className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <div className="space-y-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
             {history.length > 0 ? (
               history.map((person, idx) => (

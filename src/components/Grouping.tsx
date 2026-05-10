@@ -37,22 +37,28 @@ export default function Grouping({ names }: GroupingProps) {
     groups.forEach((group, idx) => {
       group.forEach(person => {
         csvData.push({
-          'Group Number': idx + 1,
-          'Name': person.name
+          '小組編號': idx + 1,
+          '姓名': person.name
         });
       });
     });
 
+    // Generate CSV with UTF-8 BOM for Excel compatibility
     const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
+    
     const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `hr-grouping-result-${Date.now()}.csv`);
-    link.style.visibility = 'hidden';
+    link.href = url;
+    // Ensure filename has proper extension
+    link.setAttribute('download', `分組結果_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+    
     document.body.appendChild(link);
     link.click();
+    
+    // Cleanup
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
   };
 
   return (
